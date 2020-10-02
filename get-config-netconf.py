@@ -2,7 +2,7 @@ from nornir import InitNornir
 from nornir_utils.plugins.functions import print_result
 import datetime, os, xmltodict, json, sys
 from nornir_utils.plugins.tasks.files import write_file
-from nornir_netconf.plugins.tasks import netconf_edit_config, netconf_get_config
+from nornir_netconf.plugins.tasks import netconf_get_config
 
 __author__ = "Hugo Tinoco"
 __email__ = "hugotinoco@icloud.com"
@@ -43,7 +43,7 @@ def get_config(task, json_backup=False, xml_backup=False):
     path = f"Backups/{task.host.platform}"
 
     if json_backup == False and xml_backup == False:
-        sys.exit('JSON and XML are both set to False. Nothing to backup.')
+        sys.exit("JSON and XML are both set to False. Nothing to backup.")
 
     # Generate Directories:
     create_folder(path)
@@ -58,11 +58,14 @@ def get_config(task, json_backup=False, xml_backup=False):
         json_config = xml2json(xmlconfig)
 
         write_file(
-            task, filename=f"{path}/{task.name}_{today}_JSON.txt", content=json_config
+            task,
+            filename=f"{path}/{task.host.name}_{today}_JSON.txt",
+            content=json_config,
         )
     if xml_backup == True:
-        write_file(task, filename=f"{path}/{task.name}_{today}_XML.txt", content=xmlconfig)
-
+        write_file(
+            task, filename=f"{path}/{task.host.name}_{today}_XML.txt", content=xmlconfig
+        )
 
 
 def main():
